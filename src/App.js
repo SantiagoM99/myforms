@@ -9,7 +9,8 @@ function App() {
   const [formValues, setFormValues] = useState({email:"", password:"", favClass:"1"})
   const [validationStates, setValidationStates] = useState({
     emailState:   true,
-    passwordState: true
+    passwordState: true,  
+    firstTimePass: false,
   });
   const formatConfirm = /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/;
   const clickSubmit = () => {
@@ -33,11 +34,11 @@ function App() {
   const handlePasswordChange = ((e) => {
     const newPassword = e.target.value;
     const isPasswordValid = newPassword.length > 8 && /[0-9]/.test(newPassword) && /[a-zA-Z]/.test(newPassword)
-    setFormValues({...formValues, password: isPasswordValid})
+    setFormValues({...formValues, password: newPassword})
     //password must have at least 9 chars,numbers and letters
 
 
-    setValidationStates({...validationStates, passwordState: e.target.value.length > 8})
+    setValidationStates({...validationStates, passwordState: isPasswordValid, firstTimePass: true})
   });
  
   const handleSelectChange = ((e) => {
@@ -57,7 +58,7 @@ function App() {
  
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange} value={formValues.password} />
+        <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange} value={formValues.password} isValid={validationStates.firstTimePass && validationStates.passwordState} isInvalid={validationStates.firstTimePass && !validationStates.passwordState}/>
         { !validationStates.passwordState && <Form.Text className="text-muted">Your password should be have numbers and letters and should be at least 9 char long</Form.Text>}
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicCheckbox">
